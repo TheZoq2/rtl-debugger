@@ -62,8 +62,8 @@ export function activate(context: vscode.ExtensionContext) {
     }));
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.stepBackward', () =>
         rtlDebugger.session!.stepBackward()));
-    // context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.stepForward', () =>
-    //     rtlDebugger.session!.stepForward()));
+    context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.stepForward', () =>
+        rtlDebugger.session!.stepForward()));
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.continueForward', () =>
         rtlDebugger.session!.continueForward()));
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.goToTime', async () => {

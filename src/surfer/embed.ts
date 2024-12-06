@@ -1,7 +1,6 @@
 import libsurferInit, * as libsurfer from 'libsurfer';
 
 import { ClientPacketString, type ExtensionToWebviewMessage, type WebviewToExtensionMessage } from '../ui/waveform';
-import { Packet } from '../cxxrtl/link';
 
 function libsurferInjectMessage(message: any) {
     libsurfer.inject_message(JSON.stringify(message));
@@ -23,26 +22,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     const postMessage = <(message: WebviewToExtensionMessage) => void>vscode.postMessage;
     window.addEventListener('message', async (event: MessageEvent<ExtensionToWebviewMessage>) => {
         const message = event.data;
-        if (message.type == "cxxrtl_scmessage") {
-          console.log("Sending response message to Surfer")
-          await libsurfer.on_cxxrtl_sc_message(message.message.inner)
-        }
-        else {
-          console.error('[RTL Debugger] [surferEmbed] Unhandled extension to webview message', message);
+        if (message.type === 'cxxrtl_scmessage') {
+            console.log("Handing off ", message.message.inner, " to Surfer")
+            await libsurfer.on_cxxrtl_sc_message(message.message.inner);
+        } else {
+            console.error('[RTL Debugger] [surferEmbed] Unhandled extension to webview message', message);
         }
     });
 
     const handle_cs_messages = async () => {
         while (true) {
-            const message = await libsurfer.cxxrtl_cs_message()
+            const message = await libsurfer.cxxrtl_cs_message();
             if (message) {
-              console.log("Posting message from surfer: ", message);
-              postMessage({type: 'cxxrtl_csmessage', message: new ClientPacketString(message)})
+                postMessage({type: 'cxxrtl_csmessage', message: new ClientPacketString(message)});
             } else {
-              throw Error("Got an undefined message from Surfer. Its client probably disconnected")
+                throw Error('Got an undefined message from Surfer. Its client probably disconnected');
             }
         }
-    }
+    };
 
     try {
         await libsurferInit();
@@ -53,8 +50,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         await libsurfer.start_cxxrtl();
 
         libsurferInjectMessage('ToggleMenu'); // turn off menu
-        libsurferInjectMessage('ToggleStatusBar'); // turn off status bar
-        libsurferInjectMessage('ToggleSidePanel');
+        // libsurferInjectMessage('ToggleStatusBar'); // turn off status bar
+        // libsurferInjectMessage('ToggleSidePanel');
         libsurferInjectMessage({ SelectTheme: 'dark+' }); // pick VS Code like theme
 
         overlay.style.display = 'none';

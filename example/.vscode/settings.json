@@ -5,6 +5,9 @@
     "rtlDebugger.watchList": [
         {
             "id": "top data"
+        },
+        {
+            "id": "top data"
         }
     ],
     "rtlDebugger.variableOptions": {
