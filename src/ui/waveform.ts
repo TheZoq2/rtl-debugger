@@ -15,17 +15,17 @@ export class ServerPacketString {
 
 
 export type ExtensionToWebviewMessage =
-  | { type: 'restore', state: any }
-  // TODO: Proper type here
-  | { type: 'cxxrtl_scmessage', message: ServerPacketString }
-  ;
+    | { type: 'restore', state: any }
+    // TODO: Proper type here
+    | { type: 'cxxrtl_scmessage', message: ServerPacketString }
+    ;
 
 export type WebviewToExtensionMessage =
-  | { type: 'ready' }
-  | { type: 'crash', error: any }
-  // TODO: Proper type here
-  | { type: 'cxxrtl_csmessage', message: ClientPacketString }
-  ;
+    | { type: 'ready' }
+    | { type: 'crash', error: any }
+    // TODO: Proper type here
+    | { type: 'cxxrtl_csmessage', message: ClientPacketString }
+    ;
 
 export class WaveformProvider {
     constructor(
@@ -43,6 +43,7 @@ export class WaveformProvider {
         if (debuggerLink) {
             this.debuggerLink = debuggerLink;
             this.debuggerLink.onRecv = async (message) => {
+                console.log("Receving scmessage ", message.asString());
                 // console.log("Running on recv for ", message)
                 await this.sendMessage({ type: "cxxrtl_scmessage", message: new ServerPacketString(message.asString()) })
             };

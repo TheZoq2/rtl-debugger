@@ -99,6 +99,7 @@ export class Session {
             onRecv: async (serverPacket) => {},
             onDone: async () => {},
         };
+        this.secondaryLinks.push(secondaryLink)
         return secondaryLink;
     }
 
