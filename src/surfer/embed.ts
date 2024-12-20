@@ -23,14 +23,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('message', async (event: MessageEvent<ExtensionToWebviewMessage>) => {
         const message = event.data;
         if (message.type === 'cxxrtl_scmessage') {
-            console.log("Handing off ", message.message.inner, " to Surfer")
             await libsurfer.on_cxxrtl_sc_message(message.message.inner);
+        } else if (message.type === 'wcp_cs_message') {
+            await libsurfer.send_wcp_sc_message(message.message);
         } else {
             console.error('[RTL Debugger] [surferEmbed] Unhandled extension to webview message', message);
         }
     });
 
-    const handle_cs_messages = async () => {
+    const handle_cxxrtl_cs_messages = async () => {
         while (true) {
             const message = await libsurfer.cxxrtl_cs_message();
             if (message) {
@@ -41,13 +42,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    const handle_wcp_sc_messages = async () => {
+        while (true) {
+            const message = await libsurfer.next_wcp_sc_message();
+            if (message) {
+                console.log("[WCP] Receiving wcp sc message: {message}")
+                postMessage({type: 'wcp_sc_message', message: message});
+            } else {
+                throw Error('Got an undefined message from Surfer. Its client probably disconnected');
+            }
+        }
+    };
+
     try {
         await libsurferInit();
         await new libsurfer.WebHandle().start(canvas);
 
-        handle_cs_messages();
+        handle_cxxrtl_cs_messages();
+        handle_wcp_sc_messages();
 
         await libsurfer.start_cxxrtl();
+        await libsurfer.start_wcp();
 
         libsurferInjectMessage('ToggleMenu'); // turn off menu
         // libsurferInjectMessage('ToggleStatusBar'); // turn off status bar

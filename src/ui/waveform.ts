@@ -18,6 +18,7 @@ export type ExtensionToWebviewMessage =
     | { type: 'restore', state: any }
     // TODO: Proper type here
     | { type: 'cxxrtl_scmessage', message: ServerPacketString }
+    | { type: 'wcp_cs_message', message: string }
     ;
 
 export type WebviewToExtensionMessage =
@@ -25,6 +26,7 @@ export type WebviewToExtensionMessage =
     | { type: 'crash', error: any }
     // TODO: Proper type here
     | { type: 'cxxrtl_csmessage', message: ClientPacketString }
+    | { type: 'wcp_sc_message', message: string }
     ;
 
 export class WaveformProvider {
@@ -76,6 +78,8 @@ export class WaveformProvider {
             console.log('[RTL Debugger] [WaveformProvider] Got CSMessage', message.message);
             const packet: Packet<ClientPacket> = Packet.fromString(message.message.inner);
             await this.debuggerLink.send(packet);
+        } else if (message.type == 'wcp_sc_message') {
+            console.log('[RTL Debugger] [WaveformProvider] Got WCP SC message', message.message);
         } else {
             console.error('[RTL Debugger] [WaveformProvider] Unhandled webview to extension message:', message);
         }
