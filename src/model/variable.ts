@@ -44,6 +44,10 @@ export abstract class Variable {
     get cxxrtlIdentifier(): string {
         return this.fullName.join(' ');
     }
+
+    get wcpIdentifier(): string {
+        return this.fullName.join(".");
+    }
 }
 
 export class ScalarVariable extends Variable {

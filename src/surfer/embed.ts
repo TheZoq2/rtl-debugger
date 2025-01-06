@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (message.type === 'cxxrtl_scmessage') {
             await libsurfer.on_cxxrtl_sc_message(message.message.inner);
         } else if (message.type === 'wcp_cs_message') {
-            await libsurfer.send_wcp_sc_message(message.message);
+            await libsurfer.handle_wcp_cs_message(message.message);
         } else {
             console.error('[RTL Debugger] [surferEmbed] Unhandled extension to webview message', message);
         }

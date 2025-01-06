@@ -11,6 +11,9 @@ import { WaveformProvider } from './ui/waveform';
 
 export function activate(context: vscode.ExtensionContext) {
     const rtlDebugger = new CXXRTLDebugger();
+    // TODO This is presumably not the right way to do it, but I'll do it like this for
+    // now in order to test the WCP stuff
+    var waveformProvider: WaveformProvider;
 
     console.log('Attached');
 
@@ -77,6 +80,11 @@ export function activate(context: vscode.ExtensionContext) {
         }
     }));
 
+    context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.addToWaveform', (treeItem) => {
+        console.log("Adding to waveform", waveformProvider)
+        waveformProvider.addVariable(treeItem.designation.variable.cxxrtlIdentifier)
+    }));
+
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.setRadix.2', (treeItem) =>
         globalVariableOptions.update(treeItem.designation.variable.cxxrtlIdentifier, { radix: 2 })));
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.setRadix.8', (treeItem) =>
@@ -104,7 +112,8 @@ export function activate(context: vscode.ExtensionContext) {
                 retainContextWhenHidden: true,
             });
         const bundleRoot = vscode.Uri.joinPath(context.extensionUri, 'out/');
-        context.subscriptions.push(new WaveformProvider(rtlDebugger, webviewPanel, bundleRoot));
+        waveformProvider = new WaveformProvider(rtlDebugger, webviewPanel, bundleRoot)
+        context.subscriptions.push(waveformProvider);
     }));
 
     // For an unknown reason, the `vscode.open` command (which does the exact same thing) ignores the options.

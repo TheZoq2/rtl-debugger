@@ -175,6 +175,12 @@
         "command": "rtlDebugger.browseWaveforms",
         "category": "RTL Debugger",
         "title": "Browse Waveforms"
+      },
+      {
+        "command": "rtlDebugger.addToWaveform",
+        "category": "RTL Debugger",
+        "title": "Add to Waveform",
+        "icon": "$(keybindings-add)"
       }
     ],
     "viewsContainers": {
@@ -318,6 +324,11 @@
         {
           "command": "rtlDebugger.unWatchVariable",
           "when": "view == rtlDebugger.sidebar && viewItem =~ /inWatchList/",
+          "group": "inline"
+        },
+        {
+          "command": "rtlDebugger.addToWaveform",
+          "when": "view == rtlDebugger.sidebar",
           "group": "inline"
         }
       ],

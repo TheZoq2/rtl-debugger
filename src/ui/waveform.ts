@@ -5,6 +5,7 @@ import { CXXRTLDebugger } from '../debugger';
 import embedHtml from '../surfer/embed.html';
 import { ILink, Packet } from '../cxxrtl/link';
 import { ClientPacket } from '../cxxrtl/proto';
+import { Variable } from '../model/variable';
 
 export class ClientPacketString {
     constructor(public inner: string) { }
@@ -83,6 +84,16 @@ export class WaveformProvider {
         } else {
             console.error('[RTL Debugger] [WaveformProvider] Unhandled webview to extension message:', message);
         }
+    }
+
+    async addVariable(variable: Variable) {
+        // TODO: How should we handle the callbacks here?
+        const message = JSON.stringify({
+            type: "command",
+            command: "add_variables",
+            names: [variable.wcpIdentifier]
+        })
+        this.sendMessage({type: 'wcp_cs_message', message})
     }
 
     private debuggerLink: ILink;
