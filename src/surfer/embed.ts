@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         await libsurfer.start_wcp();
 
         libsurferInjectMessage('ToggleMenu'); // turn off menu
-        // libsurferInjectMessage('ToggleStatusBar'); // turn off status bar
-        // libsurferInjectMessage('ToggleSidePanel');
+        libsurferInjectMessage('ToggleStatusbar'); // turn off status bar
+        libsurferInjectMessage('ToggleSidePanel');
         libsurferInjectMessage({ SelectTheme: 'dark+' }); // pick VS Code like theme
 
         overlay.style.display = 'none';

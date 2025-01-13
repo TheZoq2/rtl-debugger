@@ -328,7 +328,7 @@
         },
         {
           "command": "rtlDebugger.addToWaveform",
-          "when": "view == rtlDebugger.sidebar",
+          "when": "view == rtlDebugger.sidebar && viewItem =~ /variable/",
           "group": "inline"
         }
       ],

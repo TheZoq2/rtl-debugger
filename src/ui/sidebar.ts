@@ -203,10 +203,10 @@ class ScopeTreeItem extends TreeItem {
         for (const variable of variables) {
             if (variable instanceof ScalarVariable) {
                 children.push(new ScalarTreeItem(this.provider, variable.designation(),
-                    variable.width > 1 ? 'canWatch|canSetRadix' : 'canWatch'));
+                    variable.width > 1 ? 'canWatch|canSetRadix|variable' : 'canWatch|variable'));
             }
             if (variable instanceof MemoryVariable) {
-                children.push(new ArrayTreeItem(this.provider, variable.designation(), 'canWatch|canSetRadix'));
+                children.push(new ArrayTreeItem(this.provider, variable.designation(), 'canWatch|canSetRadix|variable'));
             }
         }
         return children;

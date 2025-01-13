@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import { NodeStreamLink } from './cxxrtl/link';
 import { StatusBarItem } from './ui/status';
 import { Session } from './debug/session';
+import { WaveformProvider } from './ui/waveform';
 
 export enum CXXRTLSimulationStatus {
     Paused = 'paused',
@@ -21,6 +22,7 @@ export class CXXRTLDebugger {
     private statusBarItem: StatusBarItem;
     private terminal: vscode.Terminal | null = null;
     session: Session | null = null;
+    waveformProvider: WaveformProvider | null = null;
 
     // Session properties.
 
