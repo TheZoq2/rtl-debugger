@@ -95,7 +95,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.unWatchVariable', (treeItem) =>
         globalWatchList.remove(treeItem.metadata.index)));
 
-
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.browseWaveforms', () => {
         const webviewPanel = vscode.window.createWebviewPanel(
             'rtlDebugger.waveforms',

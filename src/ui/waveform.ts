@@ -16,19 +16,19 @@ export class ServerPacketString {
 
 
 export type ExtensionToWebviewMessage =
-    | { type: 'restore', state: any }
-    // TODO: Proper type here
-    | { type: 'cxxrtl_scmessage', message: ServerPacketString }
-    | { type: 'wcp_cs_message', message: string }
-    ;
+| { type: 'restore', state: any }
+// TODO: Proper type here
+| { type: 'cxxrtl_scmessage', message: ServerPacketString }
+| { type: 'wcp_cs_message', message: string }
+;
 
 export type WebviewToExtensionMessage =
-    | { type: 'ready' }
-    | { type: 'crash', error: any }
-    // TODO: Proper type here
-    | { type: 'cxxrtl_csmessage', message: ClientPacketString }
-    | { type: 'wcp_sc_message', message: string }
-    ;
+| { type: 'ready' }
+| { type: 'crash', error: any }
+// TODO: Proper type here
+| { type: 'cxxrtl_csmessage', message: ClientPacketString }
+| { type: 'wcp_sc_message', message: string }
+;
 
 export class WaveformProvider {
     constructor(
