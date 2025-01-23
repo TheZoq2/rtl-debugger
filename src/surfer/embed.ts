@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         while (true) {
             const message = await libsurfer.next_wcp_sc_message();
             if (message) {
-                console.log("[WCP] Receiving wcp sc message: {message}")
                 postMessage({type: 'wcp_sc_message', message: message});
             } else {
                 throw Error('Got an undefined message from Surfer. Its client probably disconnected');

@@ -77,7 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.addToWaveform', (treeItem) => {
         if (rtlDebugger.waveformProvider) {
-            rtlDebugger.waveformProvider.addVariable(treeItem.designation.variable)
+            rtlDebugger.waveformProvider.addVariable(treeItem.designation.variable);
         }
     }));
 
@@ -106,7 +106,7 @@ export function activate(context: vscode.ExtensionContext) {
                 retainContextWhenHidden: true,
             });
         const bundleRoot = vscode.Uri.joinPath(context.extensionUri, 'out/');
-        rtlDebugger.waveformProvider = new WaveformProvider(rtlDebugger, webviewPanel, bundleRoot)
+        rtlDebugger.waveformProvider = new WaveformProvider(rtlDebugger, webviewPanel, bundleRoot);
         context.subscriptions.push(rtlDebugger.waveformProvider);
     }));
 

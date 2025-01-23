@@ -46,9 +46,8 @@ export class WaveformProvider {
         if (debuggerLink) {
             this.debuggerLink = debuggerLink;
             this.debuggerLink.onRecv = async (message) => {
-                console.log("Receving scmessage ", message.asString());
                 // console.log("Running on recv for ", message)
-                await this.sendMessage({ type: "cxxrtl_scmessage", message: new ServerPacketString(message.asString()) })
+                await this.sendMessage({ type: 'cxxrtl_scmessage', message: new ServerPacketString(message.asString()) });
             };
         } else {
             throw new Error('Failed to create secondary debugger link');
@@ -75,11 +74,11 @@ export class WaveformProvider {
             console.log('[RTL Debugger] [WaveformProvider] Ready');
         } else if (message.type === 'crash') {
             console.log('[RTL Debugger] [WaveformProvider] Crash:', message.error);
-        } else if (message.type == 'cxxrtl_csmessage') {
+        } else if (message.type === 'cxxrtl_csmessage') {
             console.log('[RTL Debugger] [WaveformProvider] Got CSMessage', message.message);
             const packet: Packet<ClientPacket> = Packet.fromString(message.message.inner);
             await this.debuggerLink.send(packet);
-        } else if (message.type == 'wcp_sc_message') {
+        } else if (message.type === 'wcp_sc_message') {
             console.log('[RTL Debugger] [WaveformProvider] Got WCP SC message', message.message);
         } else {
             console.error('[RTL Debugger] [WaveformProvider] Unhandled webview to extension message:', message);
@@ -89,11 +88,11 @@ export class WaveformProvider {
     async addVariable(variable: Variable) {
         // TODO: How should we handle the callbacks here?
         const message = JSON.stringify({
-            type: "command",
-            command: "add_variables",
+            type: 'command',
+            command: 'add_variables',
             names: [variable.wcpIdentifier]
-        })
-        this.sendMessage({type: 'wcp_cs_message', message})
+        });
+        this.sendMessage({type: 'wcp_cs_message', message});
     }
 
     private debuggerLink: ILink;
