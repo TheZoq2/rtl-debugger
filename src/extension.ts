@@ -12,8 +12,6 @@ import { WaveformProvider } from './ui/waveform';
 export function activate(context: vscode.ExtensionContext) {
     const rtlDebugger = new CXXRTLDebugger();
 
-    console.log('Attached');
-
     const sidebarTreeDataProvider = new sidebar.TreeDataProvider(rtlDebugger);
     const sidebarTreeView = vscode.window.createTreeView('rtlDebugger.sidebar', {
         treeDataProvider: sidebarTreeDataProvider
@@ -98,9 +96,7 @@ export function activate(context: vscode.ExtensionContext) {
         globalWatchList.remove(treeItem.metadata.index)));
 
 
-    console.log('Registering rtlDebugger.browseWaveforms');
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.browseWaveforms', () => {
-        console.log('Running browseWaveforms');
         const webviewPanel = vscode.window.createWebviewPanel(
             'rtlDebugger.waveforms',
             'Waveforms', {
