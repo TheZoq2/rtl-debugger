@@ -46,7 +46,7 @@ export abstract class Variable {
     }
 
     get wcpIdentifier(): string {
-        return this.fullName.join('.');
+        return this.fullName.join(' ');
     }
 }
 
