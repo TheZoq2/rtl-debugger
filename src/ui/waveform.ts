@@ -18,7 +18,7 @@ export class ServerPacketString {
 export type ExtensionToWebviewMessage =
 | { type: 'restore', state: any }
 // TODO: Proper type here
-| { type: 'cxxrtl_scmessage', message: ServerPacketString }
+| { type: 'cxxrtl_sc_message', message: ServerPacketString }
 | { type: 'wcp_cs_message', message: string }
 ;
 
@@ -26,7 +26,7 @@ export type WebviewToExtensionMessage =
 | { type: 'ready' }
 | { type: 'crash', error: any }
 // TODO: Proper type here
-| { type: 'cxxrtl_csmessage', message: ClientPacketString }
+| { type: 'cxxrtl_cs_message', message: ClientPacketString }
 | { type: 'wcp_sc_message', message: string }
 ;
 
@@ -47,7 +47,7 @@ export class WaveformProvider {
             this.debuggerLink = debuggerLink;
             this.debuggerLink.onRecv = async (message) => {
                 // console.log("Running on recv for ", message)
-                await this.sendMessage({ type: 'cxxrtl_scmessage', message: new ServerPacketString(message.asString()) });
+                await this.sendMessage({ type: 'cxxrtl_sc_message', message: new ServerPacketString(message.asString()) });
             };
         } else {
             throw new Error('Failed to create secondary debugger link');
@@ -74,7 +74,7 @@ export class WaveformProvider {
             console.log('[RTL Debugger] [WaveformProvider] Ready');
         } else if (message.type === 'crash') {
             console.log('[RTL Debugger] [WaveformProvider] Crash:', message.error);
-        } else if (message.type === 'cxxrtl_csmessage') {
+        } else if (message.type === 'cxxrtl_cs_message') {
             console.log('[RTL Debugger] [WaveformProvider] Got CSMessage', message.message);
             const packet: Packet<ClientPacket> = Packet.fromString(message.message.inner);
             await this.debuggerLink.send(packet);

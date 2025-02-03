@@ -22,7 +22,9 @@ export class CXXRTLDebugger {
     private statusBarItem: StatusBarItem;
     private terminal: vscode.Terminal | null = null;
     session: Session | null = null;
-    waveformProvider: WaveformProvider | null = null;
+    nextWaveformviewId: number = 0;
+    waveformProviders: Map<string, WaveformProvider> = new Map();
+    lastActiveWaveformTab: string | null = null;
 
     // Session properties.
 

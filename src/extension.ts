@@ -76,8 +76,12 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.addToWaveform', (treeItem) => {
-        if (rtlDebugger.waveformProvider) {
-            rtlDebugger.waveformProvider.addVariable(treeItem.designation.variable);
+        if (rtlDebugger.lastActiveWaveformTab) {
+            console.log(rtlDebugger.lastActiveWaveformTab);
+            const target = rtlDebugger.waveformProviders.get(rtlDebugger.lastActiveWaveformTab);
+            if (target) {
+                target.addVariable(treeItem.designation.variable);
+            }
         }
     }));
 
@@ -96,18 +100,47 @@ export function activate(context: vscode.ExtensionContext) {
         globalWatchList.remove(treeItem.metadata.index)));
 
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.browseWaveforms', () => {
+        const viewKey = `rtlDebugger.waveforms.${rtlDebugger.nextWaveformviewId++}`;
         const webviewPanel = vscode.window.createWebviewPanel(
-            'rtlDebugger.waveforms',
-            'Waveforms', {
+            viewKey,
+            'Waveforms',
+            {
                 viewColumn: vscode.ViewColumn.Beside,
-            }, {
+            },
+            {
                 enableScripts: true,
                 retainContextWhenHidden: true,
-            });
+            }
+        );
+        console.log(`Creating web view panel with viewType ${webviewPanel.viewType}`);
         const bundleRoot = vscode.Uri.joinPath(context.extensionUri, 'out/');
-        rtlDebugger.waveformProvider = new WaveformProvider(rtlDebugger, webviewPanel, bundleRoot);
-        context.subscriptions.push(rtlDebugger.waveformProvider);
+        const waveformProvider = new WaveformProvider(rtlDebugger, webviewPanel, bundleRoot);
+        rtlDebugger.waveformProviders.set(viewKey, waveformProvider);
+        rtlDebugger.lastActiveWaveformTab = viewKey;
+        context.subscriptions.push(waveformProvider);
     }));
+
+    vscode.window.tabGroups.onDidChangeTabs(event => {
+        const activeWaveformTab = event.changed.map((tab, _) => {
+            if (tab.input instanceof vscode.TabInputWebview) {
+                console.log(`${tab.input.viewType}`);
+
+                const key = tab.input.viewType.match(/.*(rtlDebugger.waveforms\.\d+)/);
+
+                if (key) {
+                    return key[1];
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }).find((id) => id !== null);
+
+        if (activeWaveformTab) {
+            rtlDebugger.lastActiveWaveformTab = activeWaveformTab;
+        }
+    });
 
     // For an unknown reason, the `vscode.open` command (which does the exact same thing) ignores the options.
     context.subscriptions.push(vscode.commands.registerCommand('rtlDebugger.openDocument',

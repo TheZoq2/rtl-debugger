@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const postMessage = <(message: WebviewToExtensionMessage) => void>vscode.postMessage;
     window.addEventListener('message', async (event: MessageEvent<ExtensionToWebviewMessage>) => {
         const message = event.data;
-        if (message.type === 'cxxrtl_scmessage') {
+        if (message.type === 'cxxrtl_sc_message') {
             await libsurfer.on_cxxrtl_sc_message(message.message.inner);
         } else if (message.type === 'wcp_cs_message') {
             await libsurfer.handle_wcp_cs_message(message.message);
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         while (true) {
             const message = await libsurfer.cxxrtl_cs_message();
             if (message) {
-                postMessage({type: 'cxxrtl_csmessage', message: new ClientPacketString(message)});
+                postMessage({type: 'cxxrtl_cs_message', message: new ClientPacketString(message)});
             } else {
                 throw Error('Got an undefined message from Surfer. Its client probably disconnected');
             }
